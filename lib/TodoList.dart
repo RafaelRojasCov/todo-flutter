@@ -8,11 +8,9 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   List<String> _todoItems = [];
 
-  InputDecoration _inputDecoration() {
-    return new InputDecoration(
-        hintText: 'Enter something to do...',
-        contentPadding: const EdgeInsets.all(16.0));
-  }
+  InputDecoration _inputDecoration = new InputDecoration(
+      hintText: 'Enter something to task...',
+      contentPadding: const EdgeInsets.all(16.0));
 
   TextField _myTodoDescription() {
     return new TextField(
@@ -21,7 +19,7 @@ class _TodoListState extends State<TodoList> {
         _addTodoItem(val);
         Navigator.pop(context);
       },
-      decoration: _inputDecoration(),
+      decoration: _inputDecoration,
     );
   }
 
