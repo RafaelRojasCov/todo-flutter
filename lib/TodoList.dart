@@ -8,6 +8,48 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   List<String> _todoItems = [];
 
+  InputDecoration _inputDecoration() {
+    return new InputDecoration(
+        hintText: 'Enter something to do...',
+        contentPadding: const EdgeInsets.all(16.0));
+  }
+
+  TextField _myTodoDescription() {
+    return new TextField(
+      autofocus: true,
+      onSubmitted: (val) {
+        _addTodoItem(val);
+        Navigator.pop(context);
+      },
+      decoration: _inputDecoration(),
+    );
+  }
+
+  FlatButton _cancelDelete() {
+    return new FlatButton(
+      child: new Text('CANCEL'),
+      onPressed: () {
+        return Navigator.of(context).pop();
+      },
+    );
+  }
+
+  FlatButton _markTaskAsDone(int index) {
+    return new FlatButton(
+        child: new Text('MARK AS DONE'),
+        onPressed: () {
+          _removeTodoItem(index);
+          Navigator.of(context).pop();
+        });
+  }
+
+  FloatingActionButton _addNewTask() {
+    return new FloatingActionButton(
+        onPressed: _pushAddTodoScreen,
+        tooltip: 'Add task',
+        child: new Icon(Icons.add));
+  }
+
   void _addTodoItem(String task) {
     if (task.length > 0) {
       setState(() {
@@ -20,16 +62,7 @@ class _TodoListState extends State<TodoList> {
     Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
       return new Scaffold(
           appBar: new AppBar(title: new Text('Add a new task')),
-          body: new TextField(
-            autofocus: true,
-            onSubmitted: (val) {
-              _addTodoItem(val);
-              Navigator.pop(context);
-            },
-            decoration: new InputDecoration(
-                hintText: 'Enter something to do...',
-                contentPadding: const EdgeInsets.all(16.0)),
-          ));
+          body: _myTodoDescription());
     }));
   }
 
@@ -45,20 +78,7 @@ class _TodoListState extends State<TodoList> {
         builder: (BuildContext context) {
           return new AlertDialog(
             title: new Text('Mark "${_todoItems[index]}" as done?'),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('CANCEL'),
-                onPressed: () {
-                  return Navigator.of(context).pop();
-                },
-              ),
-              new FlatButton(
-                  child: new Text('MARK AS DONE'),
-                  onPressed: () {
-                    _removeTodoItem(index);
-                    Navigator.of(context).pop();
-                  })
-            ],
+            actions: <Widget>[_cancelDelete(), _markTaskAsDone(index)],
           );
         });
   }
@@ -83,10 +103,7 @@ class _TodoListState extends State<TodoList> {
     return new Scaffold(
       appBar: new AppBar(title: new Text('Todo List')),
       body: _buildTodoList(),
-      floatingActionButton: new FloatingActionButton(
-          onPressed: _pushAddTodoScreen,
-          tooltip: 'Add task',
-          child: new Icon(Icons.add)),
+      floatingActionButton: _addNewTask(),
     );
   }
 }
